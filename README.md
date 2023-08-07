@@ -1,6 +1,7 @@
 
 # 构建环境
 ## 目录结构
+```
 ├── publish/
 └── src/
     ├── assets/                    // 静态资源目录
@@ -17,7 +18,7 @@
 ├── tsconfig.json                  // TypeScript 配置文件
 ├── vite.config.ts                 // Vite 配置文件
 └── package.json
-
+```
 
 
 
