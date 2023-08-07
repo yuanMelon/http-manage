@@ -9,6 +9,7 @@ import {ref} from 'vue'
 
 import { RouterView ,RouterLink, useRouter} from 'vue-router'
 import { useUserStore } from '@/stores/useUser';
+
 const  store = useUserStore()
 const router = useRouter()
 const login = function():void{
@@ -22,7 +23,7 @@ const login = function():void{
     登陆注册页,未登陆状态显示login
     <!-- <RouterLink to="/home">Home</RouterLink>
     <router-view></router-view> -->
-    <button @click="login()">点击登录</button>
+<a-button @click="login()">登录</a-button>
 </div>
 </template>
 <style scoped>
