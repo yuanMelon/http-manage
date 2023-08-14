@@ -1,24 +1,44 @@
-/**
-* Home 主页
-* @ author: yourName
-* @ data: 2023-08-07 14:19
-*/
-<script setup lang="ts">
-import {ref} from 'vue'
-import Navigation from '../../components/Navigation.vue';
-</script>
-<template>
-<div class="l-home">
-    
-    <Navigation></Navigation>
-    默认首页,已经登陆状态显示home
-    <br>
-    <router-link to="/interface">接口详情</router-link>
-    <br>
-    <router-link to="/">项目详情(默认)</router-link>
-    <router-view></router-view>
-</div>
-</template>
-<style scoped>
+/** * Home 主页 * @ author: yourName * @ data: 2023-08-07 14:19 */
 
+<template>
+  <div class="l-container">
+    <Navigation></Navigation>
+    <router-view></router-view>
+  </div>
+</template>
+<script lang="ts" setup>
+import { ref } from 'vue'
+import Navigation from '../../components/Navigation.vue'
+import { useRoute, useRouter } from 'vue-router'
+
+
+const router = useRouter()
+
+
+
+
+
+
+</script>
+<style scoped>
+.l-container {
+  width: 100%;
+  height: 100%;
+}
+#components-layout-demo-top-side-2 .logo {
+  float: left;
+  width: 120px;
+  height: 31px;
+  margin: 16px 24px 16px 0;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.ant-row-rtl #components-layout-demo-top-side-2 .logo {
+  float: right;
+  margin: 16px 0 16px 24px;
+}
+
+.site-layout-background {
+  background: #fff;
+}
 </style>

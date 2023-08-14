@@ -20,7 +20,7 @@ const login = function():void{
 </script>
 <template>
 <div class="">
-    登陆注册页,未登陆状态显示login
+    登陆注册页,未登陆状态显示的页面
     <!-- <RouterLink to="/home">Home</RouterLink>
     <router-view></router-view> -->
 <a-button @click="login()">登录</a-button>

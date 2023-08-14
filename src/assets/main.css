@@ -1,5 +1,76 @@
+:root{
+  --theme-color:skyblue;
+}
+
 *{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-size: 16px;
 }
+body{
+  line-height: 1;
+  font-weight: 400;
+}
+/*命名格式 --theme-排版类型-大小*/
+/*
+--- 01 TYPOGRAPHY SYSTEM
+排版系统
+
+- Font sizes (px)
+字体大小
+10 / 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 44 / 52 / 62 / 74 / 86 / 98
+
+- Font weights
+字体宽度
+Default: 400
+Medium: 500
+Semi-bold: 600
+Bold: 700
+
+- Line heights
+行高
+Default: 1
+Small: 1.05
+Medium: 1.2
+Paragraph default: 1.6
+
+- Letter spacing
+字母间隔
+-0.5px
+0.75px
+
+--- 02 COLORS色调
+- Primary: #e67e22
+- Tints 色调:
+#fdf2e9
+#fae5d3
+#eb984e
+
+- Shades 阴影: 
+#cf711f
+#45260a
+
+- Accents:强调
+- Greys:变灰
+
+#888
+#767676 (lightest grey allowed on #fff)
+#6f6f6f (lightest grey allowed on #fdf2e9)
+#555
+#333
+
+--- 05 SHADOWS 阴影
+
+0 2.4rem 4.8rem rgba(0, 0, 0, 0.075);
+
+--- 06 BORDER-RADIUS 边框圆角
+
+Default: 9px
+Medium: 11px
+
+--- 07 WHITESPACE 空白部分
+
+- Spacing system (px)
+2 / 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 80 / 96 / 128
+*/

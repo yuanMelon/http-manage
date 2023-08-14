@@ -15,29 +15,69 @@ const router = createRouter({
           path: '',
           name: 'home',
           component: HomeView,
-          meta:{
-            isLogin:true
+          meta: {
+            isLogin: true
           },
-          children:[        {
-            path: '/interface',
-            name: 'interface',
-            component: () => import('../views/main/InterfaceView.vue')
-          },
-          {
-            path: '',
-            name: 'project',
-            component: () => import('../views/main/ProjectView.vue')
-          }]
-        },
-
+          children: [
+            {
+              path: '',
+              name: 'team',
+              component: () => import('../views/main/TeamView.vue')
+            },
+            {
+              path: '/project',
+              name: 'project',
+              component: () => import('../views/main/ProjectView.vue'),
+              children: [
+                {
+                  path: '/interface',
+                  name: 'interface',
+                  component: () => import('../views/main/InterfaceView.vue'),
+                  children: [
+                    {
+                      path: '/perview',
+                      name: 'preview',
+                      component: () => import('../views/interface/PreviewView.vue')
+                    },
+                    {
+                      path: '/edit',
+                      name: 'edit',
+                      component: () => import('../views/interface/Edit.vue')
+                    },
+                    {
+                      path: '/running',
+                      name: 'running',
+                      component: () => import('../views/interface/Running.vue')
+                    }
+                  ]
+                },
+                {
+                  path: '/interfacelist',
+                  name: 'interfacelist',
+                  component: () => import('../views/interface/InterfaceList.vue')
+                },
+                {
+                  path: '/setting',
+                  name: 'setting',
+                  component: () => import('../views/project/Setting.vue')
+                },
+              ]
+            },
+            {
+              path: '/personalspace',
+              name: 'personalspace',
+              component: () => import('../views/user/Personal.vue')
+            }
+          ]
+        }
       ]
     },
     {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue'),
-      meta:{
-        isLogin:false
+      meta: {
+        isLogin: false
       }
     }
   ]
