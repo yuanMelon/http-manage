@@ -4,7 +4,7 @@ import { ref } from 'vue'
 </script>
 <template>
   <div class="title-container">
-    <p>
+    <p class="title">
       <slot>我是标题slot</slot>
     </p>
   </div>
@@ -15,6 +15,9 @@ import { ref } from 'vue'
     border-left: 4px solid var(--theme-color);
     padding-left: 20px;
 }
-
+.title{
+  font-weight:1000;
+  font-size: 20px;
+}
 
 </style>

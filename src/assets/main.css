@@ -1,16 +1,44 @@
-:root{
-  --theme-color:skyblue;
+:root {
+  --theme-color: skyblue;
+  --background-color:rgb(233, 233, 233);
+  /* font-size */
+  --font-size-light: 14px;
+  --font-size-default: 16px;
+  --font-size-bold: 18px;
+  --font-size-bolder: 20px;
+  /* font-weights */
+  --font-weight-default: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  /* line-heights */
+  --line-height-default: 1;
+  --line-height-small: 1.05;
+  --line-height-medium: 1.2;
+  --line-height-paragraph: 1.6;
+  /* Letter spacing */
+  --letter-spacing-small: -0.5px;
+  --letter-spacing-medium: 0.75px;
+  /* Color */
+  /* Shades */
+  --shades-color: #e7e7e7;
+  /* Shadows */
+  /* BORDER-RADIUS */
+  --border-radios-default: 10px;
+  --border-radios-medium: 12px;
+  /* WHITESPACE */
+  --space-default: 20px;
 }
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-size: 16px;
 }
-body{
-  line-height: 1;
-  font-weight: 400;
+body {
+  line-height: var(--line-height-default);
+  font-weight: var(--font-weight-default);
 }
 /*命名格式 --theme-排版类型-大小*/
 /*

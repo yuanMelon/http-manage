@@ -1,123 +1,81 @@
 /** * PreviewView * @ author: yourName * @ data: 2023-08-10 16:07 */
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterView ,RouterLink, useRouter} from 'vue-router'
+import { ref, onBeforeUpdate } from 'vue'
+import { RouterView, RouterLink, useRoute, useRouter } from 'vue-router'
+const route = useRoute()
 import TitleInfo from '@/components/TitleInfo.vue'
-import UserAvater from '../../components/UserAvater.vue'
-const basicinfoTitle = ref(['接口名称', '创建人', '状态', '更新时间', '接口路径', 'Mock地址'])
+const PreviewTitle = ref(['接口名称', '创建人', '状态', '更新时间', '接口路径', 'Mock地址'])
 import { VAceEditor } from 'vue3-ace-editor'
 //使用仓库
-import { useInterfaceStore } from '../../stores/useInterface';
-const  store = useInterfaceStore()
+import { useInterfaceStore } from '../../stores/useInterface'
+const store = useInterfaceStore()
 
 const head_columns = [
   {
     title: '参数名称',
     dataIndex: 'name',
-    key: 'name'
+    key: 'name',
+    width: '20%'
   },
   {
     title: '参数值',
     dataIndex: 'value',
     key: 'value',
-    width: 80
-  },
-  {
-    title: '是否必须',
-    dataIndex: 'must',
-    key: 'must',
-    ellipsis: true
+    width: '20%'
   },
   {
     title: '示例',
     dataIndex: 'example',
     key: 'example',
-    ellipsis: true
+    // ellipsis: true,
+    width: '30%'
   },
   {
     title: '备注',
     dataIndex: 'desc',
     key: 'desc',
-    ellipsis: true
+    width: '30%'
+    // ellipsis: true
   }
 ]
 const query_columns = [
   {
     title: '参数名称',
     dataIndex: 'name',
-    key: 'name'
+    key: 'name',
+    width: '20%'
   },
   {
     title: '是否必须',
-    dataIndex: 'must',
-    key: 'must',
-    ellipsis: true
+    dataIndex: "required",
+    key: 'required',
+    ellipsis: true,
+    width: '20%'
   },
   {
     title: '示例',
     dataIndex: 'example',
     key: 'example',
-    ellipsis: true
+    ellipsis: true,
+    width: '30%'
   },
   {
     title: '备注',
     dataIndex: 'desc',
     key: 'desc',
+    width: '20%',
     ellipsis: true
   }
 ]
-const head_data = [
-  {
-    key: '1',
-    name: 'John Brown',
 
-    value: 'zxvdxv',
-    must: true,
-    example: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    desc: 'hehehehehe'
-  },
-  {
-    key: '2',
-    name: 'JaBrown',
-    value: 'zxvdxv',
-    must: false,
-    example: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    desc: 'hehehehehe'
-  },
-  {
-    key: '3',
-    name: 'John Bxxxrown',
-    value: 'zzzzz',
-    must: false,
-    example: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    desc: 'hehehehehe'
-  }
-]
-const query_data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    must: 'rue',
-    example: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    desc: 'hehehehehe'
-  },
-  {
-    key: '2',
-    name: 'JaBrown',
-    must: 'false',
-    example: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    desc: 'hehehehehe'
-  },
-  {
-    key: '3',
-    name: 'John Bxxxrown',
-    must: 'false',
-    example: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    desc: 'hehehehehe'
-  }
-]
-const content = ref('xcvdsf')
-const beizhu = ref('sdfa')
+const content = ref('work')
+
+const index = ref(0)
+onBeforeUpdate(() => {
+  console.log(`调用了update`)
+  //修改加载数据
+  index.value = 0
+})
 </script>
 <template>
   <div class="l-preview">
@@ -125,65 +83,93 @@ const beizhu = ref('sdfa')
     <div class="grid">
       <div class="cell">
         <span class="cell-info">
-          {{ basicinfoTitle[0] }}
+          {{ PreviewTitle[0] }}
         </span>
-        <span> {{store.interfaceInfos[0].title}} </span>
+        <span> {{ $route.params.title }} </span>
       </div>
       <div class="cell">
         <span class="cell-info">
-          {{ basicinfoTitle[1] }}
+          {{ PreviewTitle[1] }}
         </span>
-        <div class="avater-container">
-          <img class="avater" src="../../assets/logo.svg" alt="" />
-            <router-link to="/personalspace" class="username">admin</router-link>
+        <div class="avatar-container">
+          <img class="avatar" src="../../assets/logo.svg" alt="" />
+          <router-link to="/personalspace" class="username">admin</router-link>
         </div>
       </div>
       <div class="cell">
         <span class="cell-info">
-          {{ basicinfoTitle[2] }}
+          {{ PreviewTitle[2] }}
+        </span>
+        <span
+          :class="{
+            done: store.interfaceInfos[0].status === 'done',
+            undone: store.interfaceInfos[0].status === 'undone'
+          }"
+        >
+          {{ store.map.get(`${$route.params.title}`).status }}
         </span>
       </div>
       <div class="cell">
         <span class="cell-info">
-          {{ basicinfoTitle[3] }}
+          {{ PreviewTitle[3] }}
         </span>
+        <span>{{ store.map.get(`${$route.params.title}`).c_time }}</span>
       </div>
       <div class="cell">
         <span class="cell-info">
-          {{ basicinfoTitle[4] }}
+          {{ PreviewTitle[4] }}
         </span>
+        <span>{{ store.map.get(`${$route.params.title}`).path }}</span>
       </div>
       <div class="cell">
         <span class="cell-info">
-          {{ basicinfoTitle[5] }}
+          {{ PreviewTitle[5] }}
         </span>
       </div>
     </div>
     <TitleInfo>备注</TitleInfo>
-    <p>{{ beizhu }}</p>
+    <div class="req_info">
+      <div v-html="store.map.get($route.params.title).desc"></div>
+    </div>
     <TitleInfo>请求参数</TitleInfo>
-    <div class="cell">
-      <span class="cell-info">Headres:</span>
+    <div class="req_info" v-if="store.map.get('接口3').req_headers">
+      <span class="cell-info">Heads:</span>
+      <div class="cell" >
+        <a-table
+          :pagination="false"
+          :bordered="true"
+          :columns="head_columns"
+          :data-source="store.map.get('接口3').req_headers"
+        >
+        </a-table>
+      </div>
     </div>
-    <a-table :columns="head_columns" :data-source="head_data">
-      <template #bodyCell="{ column, text }">
-        <template v-if="column.dataIndex === 'name'">
-          <a>{{ text }}</a>
-        </template>
-      </template>
-    </a-table>
-    <div class="cell">
-      <span class="cell-info">Query:</span>
+
+    <div class="req_info" v-if="store.map.get('接口3').req_query">
+      <div class="cell">
+        <span class="cell-info">Query:</span>
+      </div>
+      <a-table
+        :pagination="false"
+        :bordered="true"
+        :hideOnSinglePage="true"
+        :columns="query_columns"
+        :data-source="store.map.get('接口3').req_query"
+      >
+      </a-table>
     </div>
-    <a-table :columns="query_columns" :data-source="query_data">
-      <template #bodyCell="{ column, text }">
-        <template v-if="column.dataIndex === 'name'">
-          <a>{{ text }}</a>
-        </template>
-      </template>
-    </a-table>
     <TitleInfo>返回数据</TitleInfo>
-    <VAceEditor v-model:value="content" lang="json" theme="github" style="height: 300px" />
+
+    <!-- <a-table :pagination="false" :bordered="true" :hideOnSinglePage="true" :columns="query_columns" :data-source="query_data">
+      </a-table> -->
+    <div class="req_info">
+      <VAceEditor 
+        v-model:value="content"
+        lang="json"
+        theme="github"
+        style="height: 300px"
+      />
+    </div>
   </div>
 </template>
 
@@ -194,29 +180,49 @@ const beizhu = ref('sdfa')
   margin: 20px;
   row-gap: 10px;
   column-gap: 20px;
-
 }
 .cell {
   display: flex;
   gap: 20px;
   align-items: center;
   .cell-info {
-    font-weight: 600;
+    font-weight: var(--font-weight-bold);
   }
 }
-.avater-container{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    .avater{
-      width: 40px;
-      border-radius: 50%;
-      border: 1px solid black;
-    }
+.avatar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  .avatar {
+    width: 40px;
+    border-radius: 50%;
+    border: 1px solid black;
+  }
+}
+.req_info {
+  padding: 20px;
+  padding-right: 40px;
+}
+.done::before {
+  content: '';
+  margin-right: 5px;
+  display: inline-block;
+  border: 3px solid green;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  height: 1px;
+  width: 1px;
 }
 
-.done{}
-
-.undone{}
+.undone::before {
+  content: '';
+  margin-right: 5px;
+  display: inline-block;
+  border: 3px solid rgb(128, 0, 0);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  height: 1px;
+  width: 1px;
+}
 </style>

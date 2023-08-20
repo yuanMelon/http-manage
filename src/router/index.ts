@@ -30,26 +30,26 @@ const router = createRouter({
               component: () => import('../views/main/ProjectView.vue'),
               children: [
                 {
-                  path: '/interface',
+                  path: '/interface/:title',
                   name: 'interface',
                   component: () => import('../views/main/InterfaceView.vue'),
-                  children: [
-                    {
-                      path: '/perview',
-                      name: 'preview',
-                      component: () => import('../views/interface/PreviewView.vue')
-                    },
-                    {
-                      path: '/edit',
-                      name: 'edit',
-                      component: () => import('../views/interface/Edit.vue')
-                    },
-                    {
-                      path: '/running',
-                      name: 'running',
-                      component: () => import('../views/interface/Running.vue')
-                    }
-                  ]
+                  // children: [
+                  //   {
+                  //     path: '/perview',
+                  //     name: 'preview',
+                  //     component: () => import('../views/interface/PreviewView.vue')
+                  //   },
+                  //   {
+                  //     path: '/edit',
+                  //     name: 'edit',
+                  //     component: () => import('../views/interface/Edit.vue')
+                  //   },
+                  //   {
+                  //     path: '/running',
+                  //     name: 'running',
+                  //     component: () => import('../views/interface/Running.vue')
+                  //   }
+                  // ]
                 },
                 {
                   path: '/interfacelist',

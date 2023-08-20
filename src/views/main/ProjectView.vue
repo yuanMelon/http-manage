@@ -1,16 +1,19 @@
 /** * ProjectView 项目页 * @ author: yourName * @ data: 2023-08-07 14:56 */
 <script setup lang="ts">
 import { ref } from 'vue'
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue'
+import {LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue'
 const selectedKeys1 = ref<string[]>(['2'])
 const selectedKeys2 = ref<string[]>(['1'])
 const openKeys = ref<string[]>(['sub1'])
 import { useRoute, useRouter } from 'vue-router'
-
+import { useInterfaceStore } from '@/stores/useInterface';
+const store = useInterfaceStore();
 const router = useRouter()
 const myclick = function myclick(): void {
   router.push('/interfacelist')
 }
+
+
 </script>
 <template>
   <div class="l-project">
@@ -23,8 +26,8 @@ const myclick = function myclick(): void {
           <a-menu-item key="3">nav 3</a-menu-item>
         </a-menu>
       </a-layout-header>
-      <!-- <router-view ></router-view> -->
-      <a-layout >
+
+      <a-layout>
         <a-layout-sider width="200" style="background: #fff">
           <a-menu
             v-model:selectedKeys="selectedKeys2"
@@ -35,15 +38,12 @@ const myclick = function myclick(): void {
             <a-sub-menu key="sub1" @titleClick="myclick">
               <template #title>
                 <span>
-                  <!-- <user-outlined /> -->
                   接口列表
-                  <!-- <router-link to="/interfacelist">接口列表</router-link> -->
                 </span>
               </template>
 
-              <a-menu-item key="1" @click="router.push('/interface')">项目详情 </a-menu-item>
-              <a-menu-item key="2" @click="router.push('/')">option2 </a-menu-item>
-              <a-menu-item key="3">option3</a-menu-item>
+              <a-menu-item key="2" @click="router.push(`/interface/${'接口3'}`)">{{ store.interfaceInfos[1].title }} </a-menu-item>
+              <a-menu-item key="3" @click="router.push('/')">返回</a-menu-item>
               <a-menu-item key="4">option4</a-menu-item>
             </a-sub-menu>
             <a-sub-menu key="sub2">
@@ -73,7 +73,8 @@ const myclick = function myclick(): void {
           </a-menu>
         </a-layout-sider>
         <a-layout style="padding: 0 24px 24px">
-          <a-layout-content :style="{ background: '#fff', margin: 0, minHeight: '280px' }">   
+          <a-layout-content :style="{ background: '#fff', margin: 0, minHeight: '280px' }">
+            <router-view></router-view>
           </a-layout-content>
         </a-layout>
       </a-layout>
@@ -81,4 +82,3 @@ const myclick = function myclick(): void {
   </div>
 </template>
 <style scoped></style>
-

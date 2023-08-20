@@ -5,6 +5,7 @@
       <a-tab-pane key="1" tab="预览"><Preview></Preview></a-tab-pane>
       <a-tab-pane key="2" tab="编辑" force-render><Edit></Edit></a-tab-pane>
       <a-tab-pane key="3" tab="运行"><Running></Running></a-tab-pane>
+      <a-tab-pane key="4" tab="学习"><Stu></Stu></a-tab-pane>
     </a-tabs>
   </div>
 </template>
@@ -15,6 +16,7 @@ const activeKey = ref('1')
 import Edit from '../interface/Edit.vue'
 import Running from '../interface/Running.vue'
 import Preview from '../interface/PreviewView.vue'
+import Stu from '../interface/Stu.vue';
 </script>
 <style lang="less">
 .l-interface{
