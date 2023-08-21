@@ -12,7 +12,7 @@ const router = createRouter({
       component: LayoutView,
       children: [
         {
-          path: '',
+          path: '/home',
           name: 'home',
           component: HomeView,
           meta: {
@@ -20,17 +20,17 @@ const router = createRouter({
           },
           children: [
             {
-              path: '',
+              path: '/home/team',
               name: 'team',
               component: () => import('../views/main/TeamView.vue')
             },
             {
-              path: '/project',
+              path: '/home/project',
               name: 'project',
               component: () => import('../views/main/ProjectView.vue'),
               children: [
                 {
-                  path: '/interface',
+                  path: '/home/project/interface',
                   name: 'interface',
                   component: () => import('../views/main/InterfaceView.vue'),
                   children: [
@@ -52,16 +52,22 @@ const router = createRouter({
                   ]
                 },
                 {
-                  path: '/interfacelist',
+                  path: '/home/project/interfacelist',
                   name: 'interfacelist',
                   component: () => import('../views/interface/InterfaceList.vue')
                 },
-                {
-                  path: '/setting',
-                  name: 'setting',
-                  component: () => import('../views/project/Setting.vue')
-                },
+
               ]
+            },
+            {
+              path: '/home/setting',
+              name: 'setting',
+              component: () => import('../views/project/Setting.vue')
+            },
+            {
+              path: '/home/itemlist',
+              name: 'itemlist',
+              component: () => import('../views/project/ItemList.vue')
             },
             {
               path: '/personalspace',

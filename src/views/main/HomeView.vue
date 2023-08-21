@@ -2,22 +2,20 @@
 
 <template>
   <div class="l-container">
-    <Navigation></Navigation>
-    <router-view></router-view>
+    <Navigation/>
+    <TeamView style="width: 100px; float: left;"/>
+    <ProjectView style="width: calc(100% - 200px); float: right;"/>
   </div>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
 import Navigation from '../../components/Navigation.vue'
+import TeamView from './TeamView.vue';
+import ProjectView from './ProjectView.vue';
 import { useRoute, useRouter } from 'vue-router'
 
 
 const router = useRouter()
-
-
-
-
-
 
 </script>
 <style scoped>

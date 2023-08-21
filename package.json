@@ -15,6 +15,7 @@
     "@kangc/v-md-editor": "^2.3.16",
     "ant-design-vue": "^4.0.0",
     "axios": "^1.4.0",
+    "lodash": "^4.17.21",
     "pinia": "^2.1.3",
     "vue": "^3.3.4",
     "vue-router": "^4.2.2",
@@ -23,7 +24,8 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
     "@tsconfig/node18": "^2.0.1",
-    "@types/node": "^18.16.17",
+    "@types/lodash-es": "^4.17.8",
+    "@types/node": "^18.17.5",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.0.1",
     "@vue/eslint-config-prettier": "^7.1.0",
