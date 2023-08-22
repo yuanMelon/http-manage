@@ -22,7 +22,14 @@ const router = createRouter({
             {
               path: '',
               name: 'team',
-              component: () => import('../views/main/TeamView.vue')
+              component: () => import('../views/main/TeamView.vue'),
+              children: [
+                {
+                  path: '/itemlist',
+                  name: 'itemlist',
+                  component: () => import('../views/project/ItemList.vue')
+                }
+              ]
             },
             {
               path: '/project',
@@ -32,7 +39,7 @@ const router = createRouter({
                 {
                   path: '/interface/:title',
                   name: 'interface',
-                  component: () => import('../views/main/InterfaceView.vue'),
+                  component: () => import('../views/main/InterfaceView.vue')
                   // children: [
                   //   {
                   //     path: '/perview',
@@ -60,7 +67,7 @@ const router = createRouter({
                   path: '/setting',
                   name: 'setting',
                   component: () => import('../views/project/Setting.vue')
-                },
+                }
               ]
             },
             {
