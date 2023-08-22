@@ -6,8 +6,8 @@
           <a-menu-item key="/itemlist">
             <router-link to="/itemlist">项目列表</router-link>
           </a-menu-item>
-          <a-menu-item key="/home/setting">
-            <router-link to="/home/setting">分组设置</router-link>
+          <a-menu-item key="/setting">
+            <router-link to="/setting">分组设置</router-link>
           </a-menu-item>
         </a-menu>
         

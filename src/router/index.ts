@@ -28,6 +28,11 @@ const router = createRouter({
                   path: '/itemlist',
                   name: 'itemlist',
                   component: () => import('../views/project/ItemList.vue')
+                },
+                {
+                  path: '/setting',
+                  name: 'setting',
+                  component: () => import('../views/project/Setting.vue')
                 }
               ]
             },
@@ -62,11 +67,6 @@ const router = createRouter({
                   path: '/interfacelist',
                   name: 'interfacelist',
                   component: () => import('../views/interface/InterfaceList.vue')
-                },
-                {
-                  path: '/setting',
-                  name: 'setting',
-                  component: () => import('../views/project/Setting.vue')
                 }
               ]
             },
