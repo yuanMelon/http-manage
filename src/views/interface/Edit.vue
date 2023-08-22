@@ -119,8 +119,9 @@ onBeforeUpdate(() => {
       </a-form-item>
     </a-form>
     <TitleInfo>请求参数设置</TitleInfo>
-
-    <QueryBox></QueryBox>
+    <div class="interface-from">  
+      <QueryBox></QueryBox>
+    </div>
     <TitleInfo>返回数据设置</TitleInfo>
 
     <!-- 编辑备注 -->

@@ -82,7 +82,7 @@ export interface InterfaceReqHeader {
   /**
    * 标头id
    */
-  id: string
+  id?: string
   /**
    * 标头名称
    */
@@ -94,7 +94,8 @@ export interface InterfaceReqHeader {
   /**
    * 标头的值
    */
-  value: string
+  value: string,
+  [key: string]: string|undefined
 }
 //暂时不用
 export interface InterfaceReqParma {
@@ -122,6 +123,7 @@ export interface InterfaceReqQuery {
    * 参数是否必须
    */
   required: string
+  [key: string]: string|undefined; // 这里的 any 可以根据你的实际需求进行调整
 }
 //接口-
 export interface InterfaceParam {

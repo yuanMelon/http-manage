@@ -12,15 +12,14 @@
         <div class="req-tab" v-show="value1 === '/query'">
           <Query  @child-click="getQueryRow "></Query>
         </div>
-        <div class="req-tab" v-show="value1 === '/headers'">234</div>
+        <div class="req-tab" v-show="value1 === '/headers'"><Headers></Headers></div>
       </div>
     </div>
-    {{ value1 }}
-    {{ queryList }}
   </template>
   <script lang="ts" setup>
   import { ref } from 'vue'
   import Query from '../../../components/interface/Query.vue'
+  import Headers from '../../../components/interface/Headers.vue'
   const value1 = ref<string>('/query')
   let queryList = ref<any>(['ai'])
   
