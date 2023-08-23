@@ -108,7 +108,7 @@
   </a-table>
 </template>
 <script lang="ts" setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, onMounted ,onUpdated} from 'vue'
 import type { Ref, UnwrapRef } from 'vue'
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 import { cloneDeep } from 'lodash-es'
@@ -182,7 +182,6 @@ const edit = (value: string, key: string) => {
       return value === item[key]
     })[0]
   )
-  console.log(editableData)
 }
 
 const save = (value: string, key: string) => {
@@ -191,7 +190,6 @@ const save = (value: string, key: string) => {
 }
 
 const onDelete = (key: string) => {
-  console.log(key)
   data.value = data.value.filter((item) => {
     return item.name !== key
   })
@@ -207,6 +205,15 @@ const handleAdd = () => {
   data.value.push(newData)
 }
 //导出edit数据,或者pinia
+
+import { useInterfaceStore } from '@/stores/useInterface'
+const store = useInterfaceStore()
+onMounted(() => {
+  for (let item of store.editInterface.reqHeaders) {
+    data.value.push(item)
+  }
+})
+
 </script>
 <style lang="less" scoped>
 .editable-cell {

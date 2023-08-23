@@ -100,7 +100,7 @@
   </a-table>
 </template>
 <script lang="ts" setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref,onMounted } from 'vue'
 import type { Ref, UnwrapRef } from 'vue'
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 import { cloneDeep } from 'lodash-es'
@@ -150,11 +150,9 @@ const editableData: UnwrapRef<Record<string, InterfaceReqQuery>> = reactive({})
 const edit = (value: string, key: string) => {
   editableData[value] = cloneDeep(
     data.value.filter((item) => {
-      console.log(`是你?${value === item.desc},${value}`)
       return value === item[key]
     })[0]
   )
-  console.log(editableData)
 }
 // const edit = (key: string) => {
 //   editableData[key] = cloneDeep(data.value.filter(item => key === item.name)[0]);
@@ -165,7 +163,6 @@ const save = (value: string, key: string) => {
 }
 
 const onDelete = (key: string) => {
-  console.log(key)
   data.value = data.value.filter((item) => {
     return item.name !== key
   })
@@ -180,6 +177,13 @@ const handleAdd = () => {
   data.value.push(newData)
 }
 //导出edit数据,或者pinia
+import { useInterfaceStore } from '@/stores/useInterface'
+const store = useInterfaceStore()
+onMounted(() => {
+  for (let item of store.editInterface.reqQuery) {
+    data.value.push(item)
+  }
+})
 </script>
 <style lang="less" scoped>
 .editable-cell {

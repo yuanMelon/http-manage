@@ -72,7 +72,6 @@ const content = ref('work')
 
 const index = ref(0)
 onBeforeUpdate(() => {
-  console.log(`调用了update`)
   //修改加载数据
   index.value = 0
 })
@@ -159,9 +158,6 @@ onBeforeUpdate(() => {
       </a-table>
     </div>
     <TitleInfo>返回数据</TitleInfo>
-
-    <!-- <a-table :pagination="false" :bordered="true" :hideOnSinglePage="true" :columns="query_columns" :data-source="query_data">
-      </a-table> -->
     <div class="req_info">
       <VAceEditor 
         v-model:value="content"

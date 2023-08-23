@@ -25,7 +25,7 @@ const router = createRouter({
               component: () => import('../views/main/TeamView.vue'),
               children: [
                 {
-                  path: '/itemlist',
+                  path: '',
                   name: 'itemlist',
                   component: () => import('../views/project/ItemList.vue')
                 },
@@ -86,7 +86,15 @@ const router = createRouter({
       meta: {
         isLogin: false
       }
-    }
+    },
+    {
+      path: '/regist',
+      name: 'regist',
+      component: () => import('../views/RegistView.vue'),
+      meta: {
+        isLogin: false
+      }
+    },
   ]
 })
 // import {useUserStore} from '../stores/index'

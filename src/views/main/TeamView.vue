@@ -1,7 +1,8 @@
 <template>
   <div class="">
-    <new-project></new-project>
-    <new-team></new-team>
+    <NewTeam style="width: 100px; float: left;"/>
+
+    <NewProject style="width: calc(100% - 200px); float: right;"/>
   </div>
 </template>
 <script lang="ts" setup>

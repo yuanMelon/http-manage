@@ -135,10 +135,8 @@ function createInterface() {
       //输入的参数:对字符串进行解析
       //上传到pinia
       store.map.set(newInterface.title,newInterface)
-      //再次获取列表(摆烂式写法)
       arr = []
       getProjectList()
-      console.log(newInterface)
 }
 const formRef = ref<FormInstance>()
 const onOk = () => {
@@ -162,8 +160,7 @@ const onOk = () => {
 let arr = [];
 const getProjectList = ()=>{
   for(let item of store.map.values()){
-    // console.log(title)
-    const obj = new Object()
+    const obj:any = new Object()
     obj.title = item.title
     obj.path = item.path
     obj.status = item.status
@@ -175,7 +172,6 @@ const getProjectList = ()=>{
 
 //前往预览页面
 const  toPreview = (v:string)=>{
-  console.log(v)
   router.push('/interface/'+v)
 }
 

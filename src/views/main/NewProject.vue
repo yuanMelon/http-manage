@@ -4,7 +4,7 @@
     <a-layout style="min-height: 100vh">
         <a-menu v-model:selectedKeys="current" mode="horizontal"  style="margin: 42px 26px 0 26px">
           <a-menu-item key="/itemlist">
-            <router-link to="/itemlist">项目列表</router-link>
+            <router-link to="/">项目列表</router-link>
           </a-menu-item>
           <a-menu-item key="/setting">
             <router-link to="/setting">分组设置</router-link>

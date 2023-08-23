@@ -47,7 +47,7 @@
 
           <template #bodyCell="{ column, record }">
             <template v-if="column.key === 'name'">
-              <a>
+              <a @click="toPreview(record.name)">
                 {{ record.name }}
               </a>
             </template>
@@ -75,11 +75,14 @@
   </a-table>
   <a-pagination class="pagination" v-model:current="current" :total="dataSource.length" show-less-items :defaultPageSize="pages" hideOnSinglePage/>
     </div>
+    <!-- <a-spin v-if="isLoading" class="loading"/> -->
+    <a-spin v-if="isLoading" size="large" class="loading"/>
+    <!-- <a-spin /> -->
 </div>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, toRaw } from 'vue';
+import { computed, reactive, ref, toRaw, onMounted } from 'vue';
 import type { Ref, UnwrapRef } from 'vue';
 import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
 import type { FormInstance } from 'ant-design-vue';
@@ -154,7 +157,7 @@ interface DataItem {
 }
 
 const dataSource: Ref<DataItem[]> = ref([
-
+{key:'接口3',name:"接口3"}
 ]);
 const count = computed(() => dataSource.value.length + 1);
 const handleAdd = () => {
@@ -168,9 +171,36 @@ const handleAdd = () => {
 const onDelete = (key: string) => {
   dataSource.value = dataSource.value.filter(item => item.key !== key);
 };
+/**
+ * 韦洁,添加表格数据;loading
+ */
+import router from '../../router/index';
+import { useInterfaceStore } from '@/stores/useInterface'
+const store = useInterfaceStore()
+const isLoading = ref(false)
+onMounted(()=>{
+  store.map.keys()
+})
+//前往预览页面
+const  toPreview = (v:string)=>{
+  console.log(v)
+  isLoading.value=true
+  store.changeEditInterface('接口3')
+  router.push('/interface/'+v)
+}
+
 </script>
 
 <style scoped>
+.loading{
+  position: fixed;
+  z-index: 9999;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .add{
     width: 100%;
     height: 50px;
@@ -188,6 +218,3 @@ const onDelete = (key: string) => {
   padding-bottom: 10px;
 }
 </style>
-
-
-

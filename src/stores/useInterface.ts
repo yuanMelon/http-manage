@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { interfaceInfo } from '../data/interface'
+import type { interfaceInfo, Interface } from '../data/interface'
 export const useInterface2Store = defineStore('interface2', {
   state: () => ({
     path: ''
@@ -18,8 +18,9 @@ export const useInterface2Store = defineStore('interface2', {
 //     uid:number,
 //     desc:string
 // }
-const obj = JSON.parse('{\
-  "path": "amet esse do",\
+const obj = JSON.parse(
+  '{\
+  "path": "/home/project",\
   "title": "接口3",\
   "uid": "52",\
   "pid": "11",\
@@ -27,7 +28,7 @@ const obj = JSON.parse('{\
   "u_time": "1982-02-18 09:24:33",\
   "status": "undone",\
   "desc": "aliqua ullamco do cupidatat sed",\
-  "req_query": [\
+  "reqQuery": [\
       {\
           "name": "派理劳四然了",\
           "example": "voluptate consequat pariatur",\
@@ -36,7 +37,7 @@ const obj = JSON.parse('{\
           "id": "31"\
       }\
   ],\
-  "req_headers": [\
+  "reqHeaders": [\
       {\
           "required": "cillum voluptate nisi",\
           "id": "1",\
@@ -46,10 +47,10 @@ const obj = JSON.parse('{\
           "desc": "consequat non ut eu cillum"\
       }\
   ],\
-  "req_body_from": "irure minim eu non magna",\
-  "res_body": {},\
-  "res_body_type": "dolor reprehenderit laboris",\
-  "method": "velit",\
+  "reqBodyFrom": "irure minim eu non magna",\
+  "resBody": {},\
+  "resBody_type": "dolor reprehenderit laboris",\
+  "method": "GET",\
   "parmas": [\
       {\
           "id": "79",\
@@ -57,10 +58,11 @@ const obj = JSON.parse('{\
           "value": "dolor reprehenderit in tempor"\
       }\
   ]\
-}')
-//不好,它的表格真是智能,我在写出正确数据前还是摆烂吧
-// const obj = JSON.parse('{"name":"lolo"}')
+}'
+)
+
 console.log(obj)
+
 export const useInterfaceStore = defineStore('interface', () => {
   const map = new Map()
   map.set('接口名称', {
@@ -79,7 +81,7 @@ export const useInterfaceStore = defineStore('interface', () => {
     uid: 12,
     desc: '<p><strong>查看接口备注</strong><br><s>会变大嘛?</s></p><h1>希望不会啦</h1><p>会的,但…'
   })
-  map.set('接口3',obj)
+  map.set('接口3', obj)
   const interfaceInfos: Array<interfaceInfo> = [
     {
       title: '接口名称',
@@ -98,12 +100,49 @@ export const useInterfaceStore = defineStore('interface', () => {
       desc: '<p>2:查看接口备注</p>'
     }
   ]
-  return { interfaceInfos, map }
+
+  const editInterface= ref<Interface>({
+    cTime: '',
+    desc: '',
+    method: 'GET',
+    path: '',
+    params: [],
+    pid: '',
+    reqBodyFrom: 'bdoyadf5555544444',
+    reqHeaders: [],
+    reqParams: [],
+    reqQuery: [],
+    resBody: {},
+    resBodyType: '',
+    status: 'undone',
+    title: '',
+    uTime: '',
+    uid: '',
+    id: ''
+  })
+  const hasEdit = ref(false)
+  //更新edit数据,深拷贝
+  const changeEditInterface: (name:string|string[]) => void = (name) => {
+    console.log(`难道写错了?${name}`)
+    if(map.has(name)){
+      editInterface.value =  JSON.parse(JSON.stringify(map.get(name)))
+      console.log(editInterface.value)
+    }else{
+      console.log('没有这个接口')
+    }
+  }
+  
+  const saveEditInterface:(name:string|string[]) =>void =(name)=>{
+    map.set(name,editInterface.value)
+    console.log(map.get(name))
+  }
+  return { interfaceInfos, map ,editInterface,hasEdit,changeEditInterface,saveEditInterface}
   // const fun =async function():Promise<T>{
   //     await const result = ('')
   //     return ;
   // }
 })
+
 //axios示例
 export const useUserStore = defineStore('user', {
   // 定义状态：一个函数，返回一个对象

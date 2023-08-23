@@ -1,26 +1,5 @@
 
 # 构建环境
-## 目录结构
-```
-├── publish/
-└── src/
-    ├── assets/                    // 静态资源目录
-    ├── common/                    // 通用类库目录
-    ├── components/                // 公共组件目录
-    ├── router/                    // 路由配置目录
-    ├── store/                     // 状态管理目录
-    ├── utils/                     // 工具函数目录
-        ├── axios.ts               //axios配置文件
-    ├── views/                     // 页面组件目录
-    ├── App.vue
-    ├── main.ts
-├── index.html
-├── tsconfig.json                  // TypeScript 配置文件
-├── vite.config.ts                 // Vite 配置文件
-└── package.json
-```
-
-
 
 # http-manage
 
