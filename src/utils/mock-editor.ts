@@ -1,24 +1,13 @@
 import * as ace from 'brace';
 import * as Mock from 'mockjs';
-import 'brace/mode/javascript';
+import 'brace/mode/javascript' ;
 import 'brace/mode/json';
 import 'brace/mode/xml';
 import 'brace/mode/html';
 import 'brace/theme/xcode';
 import 'brace/ext/language_tools.js';
 import * as json5 from 'json5';
-import * as MockExtra from 'common/mock-extra.js';
-import { acequire, edit } from 'brace';
-import { mock as _mock } from 'mockjs';
-
-var ace = require('brace'),
-  Mock = require('mockjs');
-require('brace/mode/javascript');
-require('brace/mode/json');
-require('brace/mode/xml');
-require('brace/mode/html');
-require('brace/theme/xcode');
-require('brace/ext/language_tools.js');
+import * as MockExtra from './mock-extra';
 
 var langTools = ace.acequire('ace/ext/language_tools'),
   wordList = [
@@ -75,7 +64,7 @@ let dom = ace.acequire('ace/lib/dom');
 ace.acequire('ace/commands/default_commands').commands.push({
   name: 'Toggle Fullscreen',
   bindKey: 'F9',
-  exec: function(editor) {
+  exec: function(editor:any) {
     if (editor._fullscreen_yapi) {
       let fullScreen = dom.toggleCssClass(document.body, 'fullScreen');
       dom.setCssClass(editor.container, 'fullScreen', fullScreen);
@@ -85,34 +74,66 @@ ace.acequire('ace/commands/default_commands').commands.push({
   }
 });
 
-function run(options) {
-  var editor, mockEditor, rhymeCompleter;
-  function handleJson(json) {
-    var curData = mockEditor.curData;
+interface EditorInstance {
+  curData: {
+    text: string;
+    format: boolean;
+    jsonData: any;
+    mockData: () => any;
+  };
+  getValue: () => string;
+  setValue: (data: string) => void;
+  editor: any;
+  options: {
+    container?: string;
+    data?: string;
+    onChange?: (d: any) => void;
+    readOnly?: boolean;
+    fullScreen?: boolean;
+    wordList?: {
+      name: string;
+      mock: string;
+    };
+  };
+  insertCode: (code: string) => void;
+}
+
+
+
+
+function run(options: {
+  container?: string;
+  data?: string;
+  onChange?: (d: any) => void;
+  readOnly?: boolean;
+  fullScreen?: boolean;
+  wordList?: {
+    name: string;
+    mock: string;
+  }[];
+}): 
+EditorInstance 
+{
+  let editor: any, mockEditor: any, rhymeCompleter: any;
+
+  function handleJson(json: string) {
+    const curData = mockEditor.curData;
     try {
       curData.text = json;
-      var obj = json5.parse(json);
+      const obj = json5.parse(json);
       curData.format = true;
       curData.jsonData = obj;
-      curData.mockData = () => Mock.mock(MockExtra(obj, {})); //为防止时时 mock 导致页面卡死的问题，改成函数式需要用到再计算
+      curData.mockData = () => Mock.mock(MockExtra(obj, {}));
     } catch (e) {
       curData.format = e.message;
     }
   }
+
   options = options || {};
-  var container, data;
-  container = options.container || 'mock-editor';
-  if (
-    options.wordList &&
-    typeof options.wordList === 'object' &&
-    options.wordList.name &&
-    options.wordList.mock
-  ) {
-    wordList.push(options.wordList);
-  }
-  data = options.data || '';
-  options.readOnly = options.readOnly || false;
-  options.fullScreen = options.fullScreen || false;
+  const container = options.container || 'mock-editor';
+  const data = options.data || '';
+  const readOnly = options.readOnly || false;
+  const fullScreen = options.fullScreen || false;
 
   editor = ace.edit(container);
   editor.$blockScrolling = Infinity;
@@ -132,18 +153,18 @@ function run(options) {
   mockEditor = {
     curData: {},
     getValue: () => mockEditor.curData.text,
-    setValue: function(data) {
+    setValue: function(data: string) {
       editor.setValue(handleData(data));
     },
     editor: editor,
     options: options,
-    insertCode: code => {
+    insertCode: (code: string) => {
       let pos = editor.selection.getCursor();
       editor.session.insert(pos, code);
     }
   };
 
-  function formatJson(json) {
+  function formatJson(json: string) {
     try {
       return JSON.stringify(JSON.parse(json), null, 2);
     } catch (err) {
@@ -151,7 +172,7 @@ function run(options) {
     }
   }
 
-  function handleData(data) {
+  function handleData(data: string) {
     data = data || '';
     if (typeof data === 'string') {
       return formatJson(data);
@@ -164,7 +185,7 @@ function run(options) {
 
   rhymeCompleter = {
     identifierRegexps: [/[@]/],
-    getCompletions: function(editor, session, pos, prefix, callback) {
+    getCompletions: function(editor: any, session: any, pos: any, prefix: any, callback: any) {
       if (prefix.length === 0) {
         callback(null, []);
         return;
@@ -183,6 +204,12 @@ function run(options) {
   handleJson(editor.getValue());
 
   editor.clearSelection();
+/** 
+  langTools.addCompleter(rhymeCompleter);
+  mockEditor.setValue(handleData(data));
+  handleJson(editor.getValue());
+
+  editor.clearSelection();
 
   editor.getSession().on('change', () => {
     handleJson(editor.getValue());
@@ -194,7 +221,39 @@ function run(options) {
   return mockEditor;
 }
 
-/**
+  });
+*/
+  // editor.getSession().on('change', () => {
+  //   handleJson(editor.getValue());
+  //   if (typeof options.onChange === 'function') {
+  //     options.onChange.call(mockEditor, mockEditor.curtData)
+  //       editor.clearSelection();
+
+  //       editor.getSession().on('change', () => {
+  //         handleJson(editor.getValue());
+  //         if (typeof options.onChange === 'function') {
+  //           options.onChange.call(mockEditor, mockEditor.curData);
+  //         }
+  //         editor.clearSelection();
+  //       });
+      
+  //       return mockEditor;
+  //     }
+  //   }
+  // )
+  editor.getSession().on('change', () => {
+    handleJson(editor.getValue());
+    if (typeof options.onChange === 'function') {
+      options.onChange.call(mockEditor, mockEditor.curData);
+    }
+    editor.clearSelection();
+  });
+  return mockEditor;
+
+}
+
+export default run;
+        /**
  * mockEditor({
       container: 'req_body_json', //dom的id
       data: that.state.req_body_json, //初始化数据
@@ -205,4 +264,4 @@ function run(options) {
       }
     })
  */
-module.exports = run;
+// module.exports = run;

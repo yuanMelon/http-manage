@@ -27,27 +27,27 @@ export interface Interface {
   /**
    * 接口body类型
    */
-  reqBodyFrom: string
+  req_body_from: string
   /**
    * 接口标头
    */
-  reqHeaders: InterfaceReqHeader[]
+  req_headers: InterfaceReqHeader[]
   /**
    * 接口请求路径
    */
-  reqParams: InterfaceReqParma[]
+  req_params: InterfaceReqParma[]
   /**
    * 接口请求参数
    */
-  reqQuery: InterfaceReqQuery[]
+  req_query: InterfaceReqQuery[]
   /**
    * 接口响应体
    */
-  resBody: { [key: string]: any }
+  res_body: { [key: string]: any }
   /**
    * 接口响应体格式
    */
-  resBodyType: string
+  res_body_type: string
   /**
    * 接口状态
    */
@@ -99,7 +99,7 @@ export interface InterfaceReqHeader {
 }
 //暂时不用
 export interface InterfaceReqParma {
-  还是空Yapi好像没有: string
+  req: string
 }
 //接口-请求-格式
 export interface InterfaceReqQuery {
@@ -149,12 +149,12 @@ export const initialInterface: Interface = {
   path: '',
   params: [],
   pid: '',
-  reqBodyFrom: '',
-  reqHeaders: [],
-  reqParams: [],
-  reqQuery: [],
-  resBody: {},
-  resBodyType: '',
+  req_body_from: '',
+  req_headers: [],
+  req_params: [],
+  req_query: [],
+  res_body: {},
+  res_body_type: '',
   status: 'undone',
   title: '',
   uTime: '',

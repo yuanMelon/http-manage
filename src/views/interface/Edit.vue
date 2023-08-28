@@ -2,20 +2,20 @@
 <script setup lang="ts">
 import TitleInfo from '@/components/TitleInfo.vue'
 import type { FormInstance } from 'ant-design-vue'
-import {  ref, onBeforeUpdate, onMounted } from 'vue'
-import QueryBox from './box/QueryBox.vue'
+import { ref, onBeforeUpdate, onMounted, onUpdated, watch } from 'vue'
+import ReqBox from './box/ReqBox.vue'
 import { useRoute } from 'vue-router' //1.先在需要跳转的页面引入useRouter
 const { query, params } = useRoute() //2.在跳转页面定义router变量，解构得到指定的query和params传参的参数
 import { useInterfaceStore } from '@/stores/useInterface'
+import ResBox from './box/ResBox.vue'
 const store = useInterfaceStore()
-//数据
-//接口状态
 const interfaceStatus = [
   { label: '已完成', value: 'done' },
   { label: '未完成', value: 'undone' }
 ]
 const saveEdit = function (): void {
-  store.saveEditInterface(params.title)
+  console.log(params.title)
+  store.saveEditInterface(store.editInterface.title)
 }
 
 const formRef = ref<FormInstance>()
@@ -23,21 +23,23 @@ const formRef = ref<FormInstance>()
 onMounted(() => {
   //导入pinia数据
   if (params) {
+    console.log('更新edit数据,只有从项目到接口页面才使用')
     store.changeEditInterface(params.title)
   } else {
-
   }
 })
-
+onUpdated(() => {
+  console.log('更新了数据,为什么子组件的数据不会更新?')
+})
 </script>
 <template>
   <div class="l-edit">
-    <!-- <button @click="click">测试数据</button> -->
     <TitleInfo>基本设置</TitleInfo>
-    <span> {{ $route.params.title }} </span>
+    <!-- <span> {{ $route.params.title }} </span> 
     <span>{{
       store.editInterface.title + store.editInterface.status + store.editInterface.method
     }}</span>
+    -->
     <a-form
       ref="formRef"
       name="dynamic_form_nest_item"
@@ -49,7 +51,7 @@ onMounted(() => {
         label="接口名称"
         :rules="[{ required: true, message: '请设置接口名称' }]"
       >
-        <a-input v-model:value="store.editInterface.title" />
+        <a-input disabled v-model:value="store.editInterface.title" />
       </a-form-item>
       <!-- <a-form-item
         name="files"
@@ -80,13 +82,11 @@ onMounted(() => {
             placeholder=""
             disabled
           />
-          <a-form-item
-            name="path"
-            :rules="[{ required: true, message: '未设置!' }]"
+          <a-input
             style="width: 80%; text-align: left"
-          >
-            <a-input v-model:value="store.editInterface.path" class="site-input-right" />
-          </a-form-item>
+            v-model:value="store.editInterface.path"
+            class="site-input-right"
+          />
         </a-input-group>
         <!-- </div> -->
       </a-form-item>
@@ -96,10 +96,13 @@ onMounted(() => {
     </a-form>
     <TitleInfo>请求参数设置</TitleInfo>
     <div class="interface-from">
-      <QueryBox></QueryBox>
+      <ReqBox></ReqBox>
     </div>
     <TitleInfo>返回数据设置</TitleInfo>
 
+    <div class="interface-from">
+      <ResBox></ResBox>
+    </div>
     <!-- 编辑备注 -->
     <TitleInfo>备注</TitleInfo>
     <div class="interface-from">
@@ -127,7 +130,7 @@ onMounted(() => {
   padding: 20px 0;
 }
 .interface-from {
-  margin: 20px;
+  margin: 10px 20px;
 }
 .interface-info {
   background-color: var(--background-color);
@@ -159,7 +162,3 @@ onMounted(() => {
   background-color: transparent;
 }
 </style>
-
-<!-- 很奇怪,为什么写不进去? -->
-<!-- 不就是拼写5条数据么,数据已经写好了,接下来明明填进去就完成了 -->
-<!-- 差的是填写表格? -->

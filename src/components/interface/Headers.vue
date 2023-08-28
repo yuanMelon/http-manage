@@ -1,6 +1,11 @@
 <template>
   <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
-  <a-table bordered :data-source="data" :columns="columns" :pagination="false">
+  <a-table
+    bordered
+    :data-source="store.editInterface.req_headers"
+    :columns="columns"
+    :pagination="false"
+  >
     <template #bodyCell="{ column, text, record }">
       <template v-if="column.dataIndex === 'name'">
         <div class="editable-cell">
@@ -100,7 +105,11 @@
       </template>
 
       <template v-else-if="column.dataIndex === 'options'">
-        <a-popconfirm v-if="data.length" title="Sure to delete?" @confirm="onDelete(record.name)">
+        <a-popconfirm
+          v-if="store.editInterface.req_headers.length"
+          title="Sure to delete?"
+          @confirm="onDelete(record.name)"
+        >
           <a>Delete</a>
         </a-popconfirm>
       </template>
@@ -108,13 +117,18 @@
   </a-table>
 </template>
 <script lang="ts" setup>
-import { computed, reactive, ref, onMounted ,onUpdated} from 'vue'
+import { computed, reactive, ref, onMounted, onUpdated } from 'vue'
 import type { Ref, UnwrapRef } from 'vue'
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 import { cloneDeep } from 'lodash-es'
 import type { InterfaceReqHeader } from '../../data/interface'
 import type { SelectProps } from 'ant-design-vue'
 import { headersOptions } from '@/data/headerOptions'
+import { useInterfaceStore } from '@/stores/useInterface'
+const store = useInterfaceStore()
+store.$subscribe((mutations)=>{
+  // console.log(`${mutations.events.target}`)
+})
 
 const options = ref<SelectProps['options']>(headersOptions)
 
@@ -157,20 +171,20 @@ const columns = [
   }
 ]
 const data: Ref<InterfaceReqHeader[]> = ref([
-  {
-    name: '参数1',
-    example: '参数示例',
-    desc: '223',
-    required: 'true',
-    value: ''
-  },
-  {
-    name: '参数2',
-    example: '参数示例',
-    desc: '446',
-    required: 'true',
-    value: ''
-  }
+  // {
+  //   name: '参数1',
+  //   example: '参数示例',
+  //   desc: '223',
+  //   required: 'true',
+  //   value: ''
+  // },
+  // {
+  //   name: '参数2',
+  //   example: '参数示例',
+  //   desc: '446',
+  //   required: 'true',
+  //   value: ''
+  // }
 ])
 
 const count = computed(() => data.value.length + 1)
@@ -178,19 +192,22 @@ const editableData: UnwrapRef<Record<string, InterfaceReqHeader>> = reactive({})
 
 const edit = (value: string, key: string) => {
   editableData[value] = cloneDeep(
-    data.value.filter((item) => {
+    store.editInterface.req_headers.filter((item) => {
       return value === item[key]
     })[0]
   )
 }
 
 const save = (value: string, key: string) => {
-  Object.assign(data.value.filter((item) => value === item[key])[0], editableData[value])
+  Object.assign(
+    store.editInterface.req_headers.filter((item) => value === item[key])[0],
+    editableData[value]
+  )
   delete editableData[value]
 }
 
 const onDelete = (key: string) => {
-  data.value = data.value.filter((item) => {
+  store.editInterface.req_headers = store.editInterface.req_headers.filter((item) => {
     return item.name !== key
   })
 }
@@ -198,22 +215,15 @@ const handleAdd = () => {
   const newData: InterfaceReqHeader = {
     name: '更多参数',
     example: '参数示例',
-    desc: '223',
+    desc: '',
     required: 'true',
     value: ''
   }
-  data.value.push(newData)
+  store.editInterface.req_headers.push(newData)
 }
-//导出edit数据,或者pinia
 
-import { useInterfaceStore } from '@/stores/useInterface'
-const store = useInterfaceStore()
-onMounted(() => {
-  for (let item of store.editInterface.reqHeaders) {
-    data.value.push(item)
-  }
-})
 
+onMounted(() => {})
 </script>
 <style lang="less" scoped>
 .editable-cell {

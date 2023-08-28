@@ -4,9 +4,9 @@ import pinia from '@/stores/store'
 import {useUserStore} from '../stores/useuser'
 const store = useUserStore(pinia)
 router.beforeEach((to,from,next)=>{
-    console.log(to,from)
+    // console.log(to,from)
     if(to.meta.isLogin){
-        console.log(to.meta)
+        // console.log(to.meta)
         let token = store.token;
         if(token){
             next();
@@ -16,7 +16,7 @@ router.beforeEach((to,from,next)=>{
             })
         }
     }else{
-        console.log('islogin = false')
+        // console.log('islogin = false')
         next();
     }
 })

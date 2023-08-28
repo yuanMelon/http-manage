@@ -1,6 +1,6 @@
 <template>
   <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
-  <a-table bordered :data-source="data" :columns="columns" :pagination="false">
+  <a-table bordered :data-source="store.editInterface.req_query" :columns="columns" :pagination="false">
     <template #bodyCell="{ column, text, record }">
       <template v-if="column.dataIndex === 'name'">
         <div class="editable-cell">
@@ -92,7 +92,7 @@
       </template>
 
       <template v-else-if="column.dataIndex === 'options'">
-        <a-popconfirm v-if="data.length" title="Sure to delete?" @confirm="onDelete(record.name)">
+        <a-popconfirm v-if="store.editInterface.req_query.length" title="Sure to delete?" @confirm="onDelete(record.name)">
           <a>Delete</a>
         </a-popconfirm>
       </template>
@@ -130,26 +130,26 @@ const columns = [
   }
 ]
 const data: Ref<InterfaceReqQuery[]> = ref([
-  {
-    name: '参数1',
-    example: '参数示例',
-    desc: '223',
-    required: 'true'
-  },
-  {
-    name: '参数2',
-    example: '参数示例',
-    desc: '446',
-    required: 'true'
-  }
+  // {
+  //   name: '参数1',
+  //   example: '参数示例',
+  //   desc: '223',
+  //   required: 'true'
+  // },
+  // {
+  //   name: '参数2',
+  //   example: '参数示例',
+  //   desc: '446',
+  //   required: 'true'
+  // }
 ])
 
-const count = computed(() => data.value.length + 1)
+const count = computed(() => store.editInterface.req_query.length + 1)
 const editableData: UnwrapRef<Record<string, InterfaceReqQuery>> = reactive({})
 
 const edit = (value: string, key: string) => {
   editableData[value] = cloneDeep(
-    data.value.filter((item) => {
+    store.editInterface.req_query.filter((item) => {
       return value === item[key]
     })[0]
   )
@@ -158,12 +158,12 @@ const edit = (value: string, key: string) => {
 //   editableData[key] = cloneDeep(data.value.filter(item => key === item.name)[0]);
 // };
 const save = (value: string, key: string) => {
-  Object.assign(data.value.filter((item) => value === item[key])[0], editableData[value])
+  Object.assign(store.editInterface.req_query.filter((item) => value === item[key])[0], editableData[value])
   delete editableData[value]
 }
 
 const onDelete = (key: string) => {
-  data.value = data.value.filter((item) => {
+  store.editInterface.req_query = store.editInterface.req_query.filter((item) => {
     return item.name !== key
   })
 }
@@ -171,18 +171,18 @@ const handleAdd = () => {
   const newData: InterfaceReqQuery = {
     name: '更多参数',
     example: '参数示例',
-    desc: '223',
+    desc: '',
     required: 'true'
   }
-  data.value.push(newData)
+  store.editInterface.req_query.push(newData)
 }
 //导出edit数据,或者pinia
 import { useInterfaceStore } from '@/stores/useInterface'
 const store = useInterfaceStore()
 onMounted(() => {
-  for (let item of store.editInterface.reqQuery) {
-    data.value.push(item)
-  }
+  // for (let item of store.editInterface.reqQuery) {
+  //   data.value.push(item)
+  // }
 })
 </script>
 <style lang="less" scoped>

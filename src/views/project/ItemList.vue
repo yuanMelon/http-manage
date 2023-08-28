@@ -172,7 +172,7 @@ const onDelete = (key: string) => {
   dataSource.value = dataSource.value.filter(item => item.key !== key);
 };
 /**
- * 韦洁,添加表格数据;loading
+ * 韦洁,添加表格数据,路由跳转;loading
  */
 import router from '../../router/index';
 import { useInterfaceStore } from '@/stores/useInterface'

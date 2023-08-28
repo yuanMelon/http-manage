@@ -43,7 +43,7 @@
                 <a-select-option value="head">HEAD</a-select-option>
               </a-select>
 
-              <a-from-item
+              <a-form-item
                 style="width: 80%; text-align: left"
                 name="path"
                 :rules="[{ required: true, message: '未设置!' }]"
@@ -53,7 +53,7 @@
                   class="site-input-right"
                   placeholder="路径"
                 />
-              </a-from-item>
+              </a-form-item>
             </a-input-group>
           </div>
         </a-form-item>

@@ -1,6 +1,13 @@
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import { defineStore } from 'pinia'
-import type { interfaceInfo, Interface } from '../data/interface'
+import type {
+  interfaceInfo,
+  Interface,
+  InterfaceReqQuery,
+  InterfaceReqHeader
+} from '../data/interface'
+import { areObjectsEqual } from '@/utils/objutil'
+// import { edit } from 'brace';
 export const useInterface2Store = defineStore('interface2', {
   state: () => ({
     path: ''
@@ -26,9 +33,9 @@ const obj = JSON.parse(
   "pid": "11",\
   "c_time": "1991-11-19 13:06:02",\
   "u_time": "1982-02-18 09:24:33",\
-  "status": "undone",\
+  "status": "done",\
   "desc": "aliqua ullamco do cupidatat sed",\
-  "reqQuery": [\
+  "req_query": [\
       {\
           "name": "派理劳四然了",\
           "example": "voluptate consequat pariatur",\
@@ -37,19 +44,19 @@ const obj = JSON.parse(
           "id": "31"\
       }\
   ],\
-  "reqHeaders": [\
+  "req_headers": [\
       {\
           "required": "cillum voluptate nisi",\
           "id": "1",\
-          "name": "济口由",\
+          "name": "别寄了",\
           "value": "deserunt laboris eu",\
           "example": "sint commodo sunt tempor",\
           "desc": "consequat non ut eu cillum"\
       }\
   ],\
-  "reqBodyFrom": "irure minim eu non magna",\
-  "resBody": {},\
-  "resBody_type": "dolor reprehenderit laboris",\
+  "req_body_from": "irure minim eu non magna",\
+  "res_body": "字符串会报错吗?如果不会就改一下body的格式吧",\
+  "res_body_type": "dolor reprehenderit laboris",\
   "method": "GET",\
   "parmas": [\
       {\
@@ -61,27 +68,10 @@ const obj = JSON.parse(
 }'
 )
 
-console.log(obj)
-
 export const useInterfaceStore = defineStore('interface', () => {
-  const map = new Map()
-  map.set('接口名称', {
-    title: '接口名称',
-    path: '/home',
-    status: 'done',
-    up_time: 112233,
-    uid: 11,
-    desc: '<p>查看接口备注</p>'
-  })
-  map.set('接口名称2', {
-    title: '接口名称2',
-    path: '/interface',
-    status: 'done',
-    up_time: 2112233,
-    uid: 12,
-    desc: '<p><strong>查看接口备注</strong><br><s>会变大嘛?</s></p><h1>希望不会啦</h1><p>会的,但…'
-  })
+  let map = reactive(new Map())
   map.set('接口3', obj)
+  console.log(`怎么会有这种请`,map.get('接口3'))
   const interfaceInfos: Array<interfaceInfo> = [
     {
       title: '接口名称',
@@ -101,46 +91,111 @@ export const useInterfaceStore = defineStore('interface', () => {
     }
   ]
 
-  const editInterface= ref<Interface>({
+  let editInterface = reactive<Interface>({
     cTime: '',
     desc: '',
     method: 'GET',
     path: '',
     params: [],
     pid: '',
-    reqBodyFrom: 'bdoyadf5555544444',
-    reqHeaders: [],
-    reqParams: [],
-    reqQuery: [],
-    resBody: {},
-    resBodyType: '',
-    status: 'undone',
+    req_body_from: '5555544444',
+    req_headers: [],
+    req_params: [],
+    req_query: [],
+    res_body: {},
+    res_body_type: '',
+    status: 'done',
     title: '',
     uTime: '',
     uid: '',
     id: ''
   })
-  const hasEdit = ref(false)
-  //更新edit数据,深拷贝
-  const changeEditInterface: (name:string|string[]) => void = (name) => {
-    console.log(`难道写错了?${name}`)
-    if(map.has(name)){
-      editInterface.value =  JSON.parse(JSON.stringify(map.get(name)))
-      console.log(editInterface.value)
-    }else{
-      console.log('没有这个接口')
+  //reactive没能相应对象内部的数组和对象,先试试能不能用
+  let editReqQuery = reactive<InterfaceReqQuery[]>([])
+  let editReqHeaders = reactive<InterfaceReqHeader[]>([
+    {
+      required: 'true',
+      id: '4',
+      name: '接口那',
+      value: 'doris eu',
+      example: 'sint cr',
+      desc: 'conseqlum'
+    }
+  ])
+  let editReqBody = reactive<{ [key: string]: any }>({})
+
+  let sendInterface = reactive<Interface>({
+    cTime: '',
+    desc: '',
+    method: 'GET',
+    path: '',
+    params: [],
+    pid: '',
+    req_body_from: '5555544444',
+    req_headers: [],
+    req_params: [],
+    req_query: [],
+    res_body: {},
+    res_body_type: '',
+    status: 'done',
+    title: '',
+    uTime: '',
+    uid: '',
+    id: ''
+  })
+  //更新send数据
+  const changeSendInterface: (name: string | string[]) => void = (name) => {
+    if (map.has(name)) {
+      sendInterface = Object.assign(sendInterface, map.get(name))
+    } else {
     }
   }
-  
-  const saveEditInterface:(name:string|string[]) =>void =(name)=>{
-    map.set(name,editInterface.value)
-    console.log(map.get(name))
+  const saveSendInterface: (name: string | string[]) => void = (name) => {
+    map.set(name, Object.assign(map.get(name), sendInterface))
   }
-  return { interfaceInfos, map ,editInterface,hasEdit,changeEditInterface,saveEditInterface}
-  // const fun =async function():Promise<T>{
-  //     await const result = ('')
-  //     return ;
-  // }
+  //更新edit数据
+  const changeEditInterface: (name: string | string[]) => void = (name) => {
+    if (map.has(name)) {
+      console.log('更新的接口名称' + name)
+      console.log('更新前', editInterface.req_headers)
+      editInterface = Object.assign(editInterface, map.get(name))
+      if(!map.get(name).req_headers){
+        editInterface.req_headers.splice(0)
+      }
+      if(!map.get(name).req_query){
+        editInterface.req_query.splice(0)
+      }
+
+      console.log('更新后', editInterface.req_headers)
+
+    } else {
+    }
+  }
+  const saveEditInterface: (name: string | string[]) => void = (name) => {
+    hasEdit.value = !hasEdit.value
+    // map.set(name,JSON.parse(JSON.stringify(editInterface.value)))
+    map.set(name, Object.assign(map.get(name), editInterface))
+    changeSendInterface(name)
+    hasEdit.value = !hasEdit.value
+  }
+  const saveHasEdit: () => void = () => {
+    hasEdit.value = !hasEdit.value
+  }
+  const hasEdit = ref(false)
+  return {
+    saveHasEdit,
+    interfaceInfos,
+    map,
+    editInterface,
+    sendInterface,
+    hasEdit,
+    changeEditInterface,
+    saveEditInterface,
+    changeSendInterface,
+    saveSendInterface,
+    editReqHeaders
+  }
+
 })
 
 //axios示例

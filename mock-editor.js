@@ -8,6 +8,7 @@ require('brace/theme/xcode');
 require('brace/ext/language_tools.js');
 var json5 = require('json5');
 const MockExtra = require('common/mock-extra.js');
+// const MockExtra = require('/');
 
 var langTools = ace.acequire('ace/ext/language_tools'),
   wordList = [

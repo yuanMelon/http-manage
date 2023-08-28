@@ -8,6 +8,7 @@ const PreviewTitle = ref(['接口名称', '创建人', '状态', '更新时间',
 import { VAceEditor } from 'vue3-ace-editor'
 //使用仓库
 import { useInterfaceStore } from '../../stores/useInterface'
+import JsonEditor from '@/components/interface/JsonEditor.vue'
 const store = useInterfaceStore()
 
 const head_columns = [
@@ -27,15 +28,15 @@ const head_columns = [
     title: '示例',
     dataIndex: 'example',
     key: 'example',
-    // ellipsis: true,
-    width: '30%'
+    width: '30%',
+    ellipsis: true
   },
   {
     title: '备注',
     dataIndex: 'desc',
     key: 'desc',
-    width: '30%'
-    // ellipsis: true
+    width: '30%',
+    ellipsis: true
   }
 ]
 const query_columns = [
@@ -47,7 +48,7 @@ const query_columns = [
   },
   {
     title: '是否必须',
-    dataIndex: "required",
+    dataIndex: 'required',
     key: 'required',
     ellipsis: true,
     width: '20%'
@@ -78,6 +79,10 @@ onBeforeUpdate(() => {
 </script>
 <template>
   <div class="l-preview">
+    <div class="">
+      <!-- {{ store.hasEdit }} -->
+      <!-- {{  store.map.get(`${$route.params.title}`).status }} -->
+    </div>
     <TitleInfo>基本信息</TitleInfo>
     <div class="grid">
       <div class="cell">
@@ -101,8 +106,8 @@ onBeforeUpdate(() => {
         </span>
         <span
           :class="{
-            done: store.interfaceInfos[0].status === 'done',
-            undone: store.interfaceInfos[0].status === 'undone'
+            done: store.map.get($route.params.title).status === 'done',
+            undone: store.map.get($route.params.title).status === 'undone'
           }"
         >
           {{ store.map.get(`${$route.params.title}`).status }}
@@ -131,20 +136,24 @@ onBeforeUpdate(() => {
       <div v-html="store.map.get($route.params.title).desc"></div>
     </div>
     <TitleInfo>请求参数</TitleInfo>
-    <div class="req_info" v-if="store.map.get('接口3').req_headers">
-      <span class="cell-info">Heads:</span>
-      <div class="cell" >
+    <div class="req_info" v-if="store.map.get($route.params.title).req_headers">
+      <div class="cell">
+        <span class="cell-info">Heads: </span>
+      </div>
+
+      <div class="cell">
         <a-table
           :pagination="false"
           :bordered="true"
           :columns="head_columns"
-          :data-source="store.map.get('接口3').req_headers"
+          :hideOnSinglePage="true"
+          :data-source="store.map.get($route.params.title).req_headers"
         >
         </a-table>
       </div>
     </div>
 
-    <div class="req_info" v-if="store.map.get('接口3').req_query">
+    <div class="req_info" v-if="store.map.get($route.params.title).req_query">
       <div class="cell">
         <span class="cell-info">Query:</span>
       </div>
@@ -153,19 +162,15 @@ onBeforeUpdate(() => {
         :bordered="true"
         :hideOnSinglePage="true"
         :columns="query_columns"
-        :data-source="store.map.get('接口3').req_query"
+        :data-source="store.map.get($route.params.title).req_query"
       >
       </a-table>
     </div>
     <TitleInfo>返回数据</TitleInfo>
     <div class="req_info">
-      <VAceEditor 
-        v-model:value="content"
-        lang="json"
-        theme="github"
-        style="height: 300px"
-      />
+      <JsonEditor :editValue="store.map.get($route.params.title).res_body"></JsonEditor>
     </div>
+    {{ store.map.get($route.params.title) }}
   </div>
 </template>
 
