@@ -35,11 +35,19 @@
         :columns="columns" 
         :data-source="dataSource.slice((current - 1) * 8, current*8)" 
         :pagination="false"
+<<<<<<< HEAD
         :customRow="rowClick">
           <template #headerCell="{ column }">
             <template v-if="column.key === 'name'">
               <span>
                 <smile-outlined />
+=======
+        :customRow="rowClick"
+        >
+          <template #headerCell="{ column }">
+            <template v-if="column.key === 'name'">
+              <span>
+>>>>>>> zhulishan
                 项目名称
               </span>
             </template>
@@ -47,7 +55,11 @@
 
           <template #bodyCell="{ column, record }">
             <template v-if="column.key === 'name'">
+<<<<<<< HEAD
               <a @click="toPreview(record.name)">
+=======
+              <a>
+>>>>>>> zhulishan
                 {{ record.name }}
               </a>
             </template>
@@ -66,6 +78,11 @@
               <a-popconfirm
                 v-if="dataSource.length"
                 title="确定删除?"
+<<<<<<< HEAD
+=======
+                ok-text="确定"
+                cancel-text="取消"
+>>>>>>> zhulishan
                 @confirm="onDelete(record.key)"
               >
                 <a>删除</a>
@@ -75,13 +92,17 @@
   </a-table>
   <a-pagination class="pagination" v-model:current="current" :total="dataSource.length" show-less-items :defaultPageSize="pages" hideOnSinglePage/>
     </div>
+<<<<<<< HEAD
     <!-- <a-spin v-if="isLoading" class="loading"/> -->
     <a-spin v-if="isLoading" size="large" class="loading"/>
     <!-- <a-spin /> -->
+=======
+>>>>>>> zhulishan
 </div>
 </template>
 
 <script setup lang="ts">
+<<<<<<< HEAD
 import { computed, reactive, ref, toRaw, onMounted } from 'vue';
 import type { Ref, UnwrapRef } from 'vue';
 import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
@@ -100,6 +121,20 @@ const pages:Number=8
     }
   }
 }
+=======
+import { reactive, ref, toRaw, onBeforeMount, watch} from 'vue';
+import type { Ref } from 'vue';
+import type { FormInstance } from 'ant-design-vue';
+import axios from 'axios';
+import { projectStore } from '../../stores/useProject';
+const  store = projectStore()
+// 实例化 store
+import { message } from 'ant-design-vue';
+  const info = () => {
+    message.info('项目已存在！');
+  };
+const pages:Number=8
+>>>>>>> zhulishan
 
 const current = ref(1);
 interface Values {
@@ -118,6 +153,7 @@ const onOk = () => {
   formRef.value
     .validateFields()
     .then(values => {
+<<<<<<< HEAD
       console.log('Received values of form: ', values);
       // 添加分组
       const tableData=({
@@ -133,6 +169,32 @@ const onOk = () => {
       visible.value = false;
       formRef.value.resetFields();
       console.log('reset formState: ', toRaw(formState));
+=======
+      axios.post('http://localhost:3001/project/list',{
+        gid:store.gid,
+        name:formState.nameOfItem
+      })
+      .then(function (response) {
+        if(response.data.msg=='用户名重复'){
+          info()
+          // 弹窗提醒
+        }
+        else{
+          getItems()
+          console.log('已新增项目')
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      .then(function () {
+        // 总是会执行
+      });
+    console.log('formState: ', toRaw(formState));
+    visible.value = false;
+    formRef.value.resetFields();
+    console.log('reset formState: ', toRaw(formState));
+>>>>>>> zhulishan
     })
     .catch(info => {
       console.log('Validate Failed:', info);
@@ -144,10 +206,17 @@ const columns = [
     name: 'Name',
     dataIndex: 'name',
     key: 'name',
+<<<<<<< HEAD
     width:'80%'
   },
   {
     title: 'Action',
+=======
+    width:'90%'
+  },
+  {
+    title: '操作',
+>>>>>>> zhulishan
     key: 'action',
   },
 ];
@@ -156,6 +225,7 @@ interface DataItem {
   name: string
 }
 
+<<<<<<< HEAD
 const dataSource: Ref<DataItem[]> = ref([
 {key:'接口3',name:"接口3"}
 ]);
@@ -201,6 +271,108 @@ const  toPreview = (v:string)=>{
   align-items: center;
   justify-content: center;
 }
+=======
+const dataSource: Ref<DataItem[]> = ref([]);
+
+const onDelete = (key: string) => {
+  // dataSource.value = dataSource.value.filter(item => item.key !== key);
+  const delItem=dataSource.value.find(item=>item.key===key)
+  if(delItem){
+    axios.delete('http://localhost:3001/project/list',{
+    params:{
+      gid:store.gid,
+      name:delItem.name
+    }
+    })
+    .then(function (response) {
+      console.log('已删除')
+      getItems()
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+    .then(function () {
+      // 总是会执行
+    });  
+  }
+};
+
+function rowClick(record:any) {
+  return {
+    onClick: () => {
+      console.log(record.name);
+      axios.get('http://localhost:3001/project/list',{
+        params:{
+          gid:store.gid,
+          uid:120
+        }
+      })
+      .then(function (response){
+        var list =response.data.data
+        const result = list.find((obj: { name: string }) => obj.name === record.name);
+        store.itemID=result.id
+        console.log(store.itemID)
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      .then(function () {
+        // 总是会执行
+      });
+    },
+  };
+}
+
+function getItems(){
+  axios.get('http://localhost:3001/project/list',{
+    params:{
+      gid:store.gid
+    }
+  })
+  .then(function (response){
+    if(response.data.msg=='无任何项目'){
+      console.log('无项目数据')
+      dataSource.value.length=0  //  初始化
+    }
+    else{
+      dataSource.value.length=0  //  初始化
+      var list =response.data.data
+      list.forEach((item:any)=>{
+        const tableData=({
+          key: '',
+          name: '',
+          description: ''
+        })
+        tableData.key=String(item.id)
+        tableData.name=item.name
+        // tableData.description=formState.description
+        dataSource.value.push(tableData)
+      })
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  })
+  .then(function () {
+    // 总是会执行
+  });
+}
+
+watch(
+  () => store.flash,
+  (newValue, oldValue)=>{
+    getItems()
+  }
+);
+
+onBeforeMount(()=>{
+  console.log(store.gid+'gid') // 输出 "My Project"
+  getItems()
+})
+</script>
+
+<style scoped>
+>>>>>>> zhulishan
 .add{
     width: 100%;
     height: 50px;

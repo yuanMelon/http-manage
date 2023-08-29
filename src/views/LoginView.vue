@@ -7,6 +7,7 @@ import type { Rule } from 'ant-design-vue/es/form'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 const store = useUserStore()
 const router = useRouter()
+<<<<<<< HEAD
 const formRef = ref()
 const formRef2 = ref()
 interface loginForm {
@@ -65,6 +66,11 @@ const onLogin = async () => {
     .catch((error) => {
       console.log('error', error)
     })
+=======
+const login = function():void{
+    store.token = !store.token
+    router.push('/home/itemList')
+>>>>>>> zhulishan
 }
 </script>
 

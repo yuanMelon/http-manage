@@ -8,4 +8,12 @@
       "path": "./tsconfig.app.json"
     },
   ],
+  "compilerOptions": {
+    "strict":false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@ant-design/icons/*": ["./node_modules/@ant-design/icons/*"]
+    }
+  }
 }
