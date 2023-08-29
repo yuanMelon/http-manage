@@ -9,6 +9,15 @@
           <a-menu-item key="/home/setting">
             <router-link to="/home/setting">分组设置</router-link>
           </a-menu-item>
+          <a-menu-item key="/home/members">
+            <router-link to="/home/members">成员管理</router-link>
+          </a-menu-item>
+          <a-menu-item key="/home/itemmsg">
+            <router-link to="/home/itemmsg">项目概览</router-link>
+          </a-menu-item>
+          <!-- <a-menu-item key="/home/itemmsg">
+            <router-link to="/home/itemmsg">数据导入</router-link>
+          </a-menu-item> -->
         </a-menu>
         
         <a-layout-content style="margin: 0px 26px">
@@ -20,11 +29,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue'
+import { projectStore } from '../../stores/useProject';
+const  store = projectStore()
 const current = ref<string[]>(['/home/itemlist']);
-import { useRoute, useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
 
-const router = useRouter()
+// const router = useRouter()
 
 </script>
 

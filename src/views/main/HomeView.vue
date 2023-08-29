@@ -12,10 +12,8 @@ import { ref } from 'vue'
 import Navigation from '../../components/Navigation.vue'
 import TeamView from './TeamView.vue';
 import ProjectView from './ProjectView.vue';
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
-
-const router = useRouter()
 
 </script>
 <style scoped>

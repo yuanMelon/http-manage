@@ -6,25 +6,31 @@
 <template>
 <div class="l-itemList">
     <div class="add" style="background-color: #f5f5f5 ">
-        <a-button size="small" type="primary" style="margin-left: auto; font-size: 1px;" @click="visible = true">新建项目</a-button>
+        <a-button size="small" type="primary" style="margin-left: auto; font-size: 1px;" @click="visible = true">添加成员</a-button>
         <!-- 弹出内容 -->
         <a-modal
       v-model:open="visible"
-      title="新建项目"
+      title="添加成员"
       ok-text="确认"
       cancel-text="取消"
       @ok="onOk"
     >
       <a-form ref="formRef" :model="formState" layout="vertical" name="form_in_modal">
         <a-form-item
-          name="nameOfItem"
-          label="项目名称"
-          :rules="[{ required: true, message: '请输入项目名称' }]"
+          name="nameOfMember"
+          label="用户名"
+          :rules="[{ required: true, message: '请输入用户名' }]"
         >
-          <a-input v-model:value="formState.nameOfItem" />
+          <a-input v-model:value="formState.nameOfMember" />
         </a-form-item>
-        <a-form-item name="description" label="项目描述">
-          <a-textarea v-model:value="formState.description" />
+        <a-form-item name="role" label="用户角色">
+            <a-select
+                ref="select"
+                v-model:value="formState.role"
+                style="width: 120px"
+                :options="options"
+            >
+            </a-select>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -35,12 +41,12 @@
         :columns="columns" 
         :data-source="dataSource.slice((current - 1) * 8, current*8)" 
         :pagination="false"
-        :customRow="rowClick"
         >
           <template #headerCell="{ column }">
             <template v-if="column.key === 'name'">
               <span>
-                项目名称
+                <!-- <smile-outlined /> -->
+                成员列表
               </span>
             </template>
           </template>
@@ -62,12 +68,20 @@
                 </a-tag>
               </span>
             </template>
+            <template v-else-if="column.key === 'role'">
+                <a-select
+                ref="select"
+                v-model:value="record.role"
+                style="width: 120px"
+                @change="handleChange($event,record)"
+                :options="options"
+                >
+            </a-select>
+            </template>
             <template v-else-if="column.key === 'action'">
               <a-popconfirm
                 v-if="dataSource.length"
                 title="确定删除?"
-                ok-text="确定"
-                cancel-text="取消"
                 @confirm="onDelete(record.key)"
               >
                 <a>删除</a>
@@ -81,48 +95,71 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, toRaw, onBeforeMount, watch} from 'vue';
+import { watch, reactive, ref, toRaw, onBeforeMount } from 'vue';
 import type { Ref } from 'vue';
-import type { FormInstance } from 'ant-design-vue';
-import axios from 'axios';
+import type { FormInstance, SelectProps } from 'ant-design-vue';
 import { projectStore } from '../../stores/useProject';
-const  store = projectStore()
-// 实例化 store
+  const  store = projectStore()
+import axios from 'axios';
 import { message } from 'ant-design-vue';
   const info = () => {
-    message.info('项目已存在！');
+    message.info('用户不存在！');
+  };
+  const info2 = () => {
+    message.info('不能邀请自己！');
   };
 const pages:Number=8
 
 const current = ref(1);
+const options = ref<SelectProps['options']>([
+  {
+    value: 'owner',
+    label: '管理',
+  },
+  {
+    value: 'member',
+    label: '读写',
+  },
+  {
+    value: 'guest',
+    label: '只读',
+  },
+]);
+
 interface Values {
-  nameOfItem: string;
-  description:string
+    nameOfMember: string;
+  role:string
 }
 
 const formRef = ref<FormInstance>();
 const visible = ref(false);
 const formState = reactive<Values>({
-  nameOfItem: '',
-  description:''
+    nameOfMember: '',
+    role:'guest'
 });
+
 
 const onOk = () => {
   formRef.value
     .validateFields()
     .then(values => {
-      axios.post('http://localhost:3001/project/list',{
-        gid:store.gid,
-        name:formState.nameOfItem
+      axios.post('http://localhost:3001/project/member',{
+        uid:120,
+        name:formState.nameOfMember,
+        role:formState.role,
+        gid:store.gid
       })
       .then(function (response) {
-        if(response.data.msg=='用户名重复'){
+        if(response.data.msg=='用户不存在'){
           info()
           // 弹窗提醒
         }
+        else if(response.data.msg=='自己不能邀请自己'){
+          info2()
+        }
         else{
-          getItems()
-          console.log('已新增项目')
+          getMembers()
+          console.log('已新增成员')
         }
       })
       .catch(function (error) {
@@ -131,10 +168,10 @@ const onOk = () => {
       .then(function () {
         // 总是会执行
       });
-    console.log('formState: ', toRaw(formState));
-    visible.value = false;
-    formRef.value.resetFields();
-    console.log('reset formState: ', toRaw(formState));
+      console.log('formState: ', toRaw(formState));
+      visible.value = false;
+      formRef.value.resetFields();
+      // 清空formstage值
     })
     .catch(info => {
       console.log('Validate Failed:', info);
@@ -146,94 +183,56 @@ const columns = [
     name: 'Name',
     dataIndex: 'name',
     key: 'name',
-    width:'90%'
+    width:'75%'
+  },
+  {
+    key:'role',
+    width:'15%',
+    title:'角色'
   },
   {
     title: '操作',
     key: 'action',
-  },
+    width:'10%'
+  }
 ];
 interface DataItem {
   key: string;
-  name: string
+  name: string;
+  role:string
 }
 
-const dataSource: Ref<DataItem[]> = ref([]);
+const dataSource: Ref<DataItem[]> = ref([
 
-const onDelete = (key: string) => {
-  // dataSource.value = dataSource.value.filter(item => item.key !== key);
-  const delItem=dataSource.value.find(item=>item.key===key)
-  if(delItem){
-    axios.delete('http://localhost:3001/project/list',{
+]);
+
+function getMembers(){
+  axios.get('http://localhost:3001/project/user',{
     params:{
       gid:store.gid,
-      name:delItem.name
-    }
-    })
-    .then(function (response) {
-      console.log('已删除')
-      getItems()
-    })
-    .catch(function (error) {
-      console.log(error);
-    })
-    .then(function () {
-      // 总是会执行
-    });  
-  }
-};
-
-function rowClick(record:any) {
-  return {
-    onClick: () => {
-      console.log(record.name);
-      axios.get('http://localhost:3001/project/list',{
-        params:{
-          gid:store.gid,
-          uid:120
-        }
-      })
-      .then(function (response){
-        var list =response.data.data
-        const result = list.find((obj: { name: string }) => obj.name === record.name);
-        store.itemID=result.id
-        console.log(store.itemID)
-      })
-      .catch(function (error) {
-        console.log(error);
-      })
-      .then(function () {
-        // 总是会执行
-      });
-    },
-  };
-}
-
-function getItems(){
-  axios.get('http://localhost:3001/project/list',{
-    params:{
-      gid:store.gid
+      uid:120
     }
   })
   .then(function (response){
-    if(response.data.msg=='无任何项目'){
-      console.log('无项目数据')
+    console.log('加载成员列表')
+    console.log(response.data)
+    if(response.data.msg=='你不在该成员列表中'){
       dataSource.value.length=0  //  初始化
     }
     else{
       dataSource.value.length=0  //  初始化
-      var list =response.data.data
-      list.forEach((item:any)=>{
-        const tableData=({
-          key: '',
-          name: '',
-          description: ''
-        })
-        tableData.key=String(item.id)
-        tableData.name=item.name
-        // tableData.description=formState.description
-        dataSource.value.push(tableData)
+    var list =response.data.data
+    list.forEach((item:any)=>{
+      const tableData=({
+        key: '',
+        name: '',
+        role: ''
       })
+      tableData.key=String(item.id)
+      tableData.name=item.name
+      tableData.role=item.role
+      dataSource.value.push(tableData)
+    })
     }
   })
   .catch(function (error) {
@@ -244,16 +243,58 @@ function getItems(){
   });
 }
 
+const handleChange=($event:any,record:any)=>{
+  console.log(record.key)
+  console.log($event)
+  axios.post('http://localhost:3001/project/role',{
+    uid:120,
+    uid_c:record.key,
+    gid:store.gid,
+    role:$event
+  })
+  .then(function (response) {
+      console.log(response)
+  })
+  .catch(function (error) {
+    console.log(error);
+  })
+  .then(function () {
+    // 总是会执行
+  });
+}
+
+const onDelete = (key: string) => {
+  // dataSource.value = dataSource.value.filter(item => item.key !== key);
+  const delItem=dataSource.value.find(item=>item.key===key)
+  if(delItem){
+    axios.delete('http://localhost:3001/project/member',{
+    params:{
+      gid:store.gid,
+      name:delItem.name
+    }
+    })
+    .then(function (response) {
+      console.log('已删除')
+      getMembers()
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+    .then(function () {
+      // 总是会执行
+    });  
+  }
+};
+
 watch(
   () => store.flash,
   (newValue, oldValue)=>{
-    getItems()
+    getMembers()
   }
-);
+  );
 
 onBeforeMount(()=>{
-  console.log(store.gid+'gid') // 输出 "My Project"
-  getItems()
+    getMembers()
 })
 </script>
 

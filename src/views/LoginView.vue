@@ -14,8 +14,7 @@ const  store = useUserStore()
 const router = useRouter()
 const login = function():void{
     store.token = !store.token
-    console.log(store.token+"@@@")
-    router.push('/home')
+    router.push('/home/itemList')
 }
 </script>
 <template>

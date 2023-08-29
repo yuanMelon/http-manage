@@ -70,6 +70,16 @@ const router = createRouter({
               component: () => import('../views/project/ItemList.vue')
             },
             {
+              path: '/home/members',
+              name: 'members',
+              component: () => import('../views/project/Members.vue')
+            },
+            {
+              path: '/home/itemmsg',
+              name: 'itemmsg',
+              component: () => import('../views/project/itemMsg.vue')
+            },
+            {
               path: '/personalspace',
               name: 'personalspace',
               component: () => import('../views/user/Personal.vue')
